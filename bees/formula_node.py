@@ -7,9 +7,13 @@ class FormulaNode(Node):
     def __init__(self, formula_function):
         super().__init__()
         self.formula_function = formula_function
+        self.decomposed = False
 
     def render(self):
-        return str(self.formula_function)
+        raise NotImplementedError
+
+    def __repr__(self):
+        return f"FormulaNode({self.formula_function})"
 
 
 def equ(formula_function):

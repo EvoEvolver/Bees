@@ -6,6 +6,8 @@ class Node:
     def __init__(self):
         self._content = None
         self.children = []
+        self.decomposed = False
+        self.children_decomposed = False
 
     def render(self):
         raise NotImplementedError
@@ -25,6 +27,7 @@ class JointNode(Node):
     def __init__(self, nodes):
         super().__init__()
         self.children = nodes
+        self.decomposed = True
 
     def render(self):
         return self.children
@@ -50,6 +53,7 @@ class StringNode(Node):
         super().__init__()
         self._content: str = string
         self.children = None
+        self.decomposed = True
 
     def render(self):
         return self._content
@@ -59,6 +63,7 @@ class SectionNode(Node):
     def __init__(self, content_dict: dict):
         super().__init__()
         self._content: content_dict = content_dict
+        self.decomposed = True
 
     def render(self):
         return self._content
@@ -68,6 +73,7 @@ class FunctionNode(Node):
     def __init__(self, func: Callable):
         super().__init__()
         self._content: Callable = func
+        self.decomposed = True
 
     def render(self):
         res = self._content()

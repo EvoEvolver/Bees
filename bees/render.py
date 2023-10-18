@@ -27,7 +27,10 @@ def render_to_node(src) -> Tuple[Any, bool]:
     if isinstance(src, list):
         return render_list_to_tree(src)
     if isinstance(src, Node):
-        return src.render(), False
+        if src.decomposed:
+            return src.render(), False
+        else:
+            return src, True
     if isinstance(src, Callable):
         return FunctionNode(src).render(), False
     if isinstance(src, ModuleType):
