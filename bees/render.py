@@ -1,6 +1,7 @@
 from typing import Dict, Tuple, Any, Callable, List
 
-from bees.node import Node, FunctionNode
+from bees.node import Node, FunctionNode, ModuleNode
+from types import ModuleType
 
 
 def render_to_tree(src) -> Dict:
@@ -29,6 +30,8 @@ def render_to_node(src) -> Tuple[Any, bool]:
         return src.render(), False
     if isinstance(src, Callable):
         return FunctionNode(src).render(), False
+    if isinstance(src, ModuleType):
+        return ModuleNode(src).render(), False
 
 
 def render_dict_to_tree(src: Dict) -> Tuple[Dict, bool]:

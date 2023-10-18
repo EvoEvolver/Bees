@@ -1,5 +1,5 @@
 from typing import Callable
-
+from types import ModuleType
 
 class Node:
 
@@ -58,9 +58,10 @@ class StringNode(Node):
 class SectionNode(Node):
     def __init__(self, content_dict: dict):
         super().__init__()
-        self._content: str = content_dict.get("_", "")
-        self.children = [(title, content) for title, content in content_dict.items() if
-                         title != "_"]
+        self._content: content_dict = content_dict
+
+    def render(self):
+        return self._content
 
 
 class FunctionNode(Node):
@@ -74,6 +75,13 @@ class FunctionNode(Node):
             return SectionNode(res)
         else:
             return res
+
+class ModuleNode(FunctionNode):
+    def __init__(self, module: ModuleType):
+        if not hasattr(module, "main"):
+            raise ValueError("Module must have a main function to be used as a node")
+        super().__init__(module.main)
+
 
 
 def node(src=None):
@@ -89,4 +97,7 @@ def node(src=None):
         return src
     if isinstance(src, Callable):
         return FunctionNode(src)
+    # check if it is a module
+    if isinstance(src, ModuleType):
+        return ModuleNode(src)
     raise NotImplementedError
